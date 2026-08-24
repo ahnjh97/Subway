@@ -6,7 +6,12 @@ public class Subway
     // 역 추가
     public void AddStation(string name, string line)
     {
+        Station station = new(name, line);
 
+        if (!stations.ContainsKey(name))
+            stations[name] = new List<Station>();
+
+        stations[name].Add(station);
     }
 
     // 역 사이 연결
@@ -18,7 +23,10 @@ public class Subway
     // 해당 이름을 가진 역 List 가져오기 (충정로 2호선, 충정로 5호선 별개 노드 취급)
     public List<Station> FindStations(string name)
     {
-        throw new NotImplementedException();
+        if (stations.TryGetValue(name, out List<Station>? result))
+            return result;
+
+        return new List<Station>();
     }
 
     public (List<Station> Path, int TotalTime) FindShortestPath(string startName, string endName)
