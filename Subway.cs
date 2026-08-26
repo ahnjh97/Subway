@@ -20,7 +20,7 @@ public class Subway
         Station? src = FindStation(name1, line1);
         Station? dst = FindStation(name2, line2);
 
-        if(src == null || dst == null)
+        if (src == null || dst == null)
             throw new ArgumentException("존재하지 않는 역입니다.");
 
         src.AddNeighbor(dst, time);
@@ -53,9 +53,9 @@ public class Subway
 
         if (startStations.Count == 0 && endStations.Count == 0)
             throw new ArgumentException("출발역과 도착역이 " + errorStr);
-        else if(startStations.Count == 0)
+        else if (startStations.Count == 0)
             throw new ArgumentException("출발역이 " + errorStr);
-        else if(endStations.Count == 0)
+        else if (endStations.Count == 0)
             throw new ArgumentException("도착역이 " + errorStr);
 
         if (startName == endName)
@@ -63,13 +63,13 @@ public class Subway
 
         // 다익스트라
         Dictionary<Station, int> distances = new();
-        Dictionary<Station, Station> previous = new();
+        Dictionary<Station, Station?> previous = new();
 
         PriorityQueue<Station, int> pq = new();
 
         foreach (List<Station> stations in stations.Values)
         {
-            foreach(Station station in stations)
+            foreach (Station station in stations)
             {
                 distances[station] = int.MaxValue;
                 previous[station] = null;
@@ -83,12 +83,10 @@ public class Subway
             pq.Enqueue(src, 0);
         }
 
-        Station dst = null;
+        Station? dst = null;
 
-        while (pq.Count > 0)
+        while (pq.TryDequeue(out Station? cur, out int curDist))
         {
-            pq.TryDequeue(out Station cur, out int curDist);
-
             if (cur == null)
                 continue;
 
@@ -126,7 +124,7 @@ public class Subway
         // 최단 경로 복원
         List<Station> path = new();
 
-        Station curStation = dst;
+        Station? curStation = dst;
 
         while (curStation != null)
         {
